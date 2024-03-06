@@ -53,41 +53,49 @@
     </div>
 @@endsection
 @@push('page_scripts')
-    <script>
-        const tableContainer = $('#table-container')
-        var searchQuery = ''
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        const search = (query = '', page = 1) => {
-            $.ajax('@{{ route('{!! $config->prefixes->getRoutePrefixWith('.') !!}{!! $config->modelNames->camelPlural !!}.index') }}', {
-                data: {
-                    query: query,
-                    page: page
-                },
-                success: (data) => updateTable(data)
-            })
-            history.pushState(null, null, '?query=' + query + '&page=' + page)
+<script>
+    $(document).ready(function() {
+        function fetchData(page, searchValue) {
+            $.ajax({
+                url: '/{!! $config->modelNames->camelPlural !!}/?page=' + page + '&searchValue=' + searchValue,
+                success: function(data) {
+                    var newData = $(data);
+
+                    $('tbody').html(newData.find('tbody').html());
+                    $('#card-footer').html(newData.find('#card-footer').html());
+                    var paginationHtml = newData.find('.pagination').html();
+                    if (paginationHtml) {
+                        $('.pagination').html(paginationHtml);
+                    } else {
+                        $('.pagination').html('');
+                    }
+                }
+            });
+            console.log(searchValue);
         }
 
-        const updateTable = (html) => {
-            tableContainer.html(html)
-            updatePaginationLinks()
-        }
+        $('body').on('click', '.pagination a', function(param) {
 
-        const updatePaginationLinks = () => {
-            $('button[page-number]').each(function() {
-                $(this).on('click', function() {
-                    pageNumber = $(this).attr('page-number')
-                    search(searchQuery, pageNumber)
-                })
-            })
-        }
+            param.preventDefault();
 
-        $(document).ready(() => {
-            $('[type="search"]').on('input', function() {
-                searchQuery = $(this).val()
-                search(searchQuery)
-            })
-            updatePaginationLinks()
-        })
-    </script>
+            var page = $(this).attr('href').split('page=')[1];
+            console.log(page);
+            var searchValue = $('#table_search').val();
+
+            fetchData(page, searchValue);
+
+        });
+
+        $('body').on('keyup', '#table_search', function() {
+            var page = $('#page').val();
+            var searchValue = $('#table_search').val();
+
+            fetchData(page, searchValue);
+        });
+
+    });
+</script>
+
 @@endpush
