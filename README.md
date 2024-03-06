@@ -12,9 +12,12 @@ php artisan ui adminlte --auth
 npm install
 npm run dev
 
+php artisan make:migration create_projects_table
+php artisan make:migration create_taches_table
 
  php artisan infyom:scaffold Projet --fromTable --table=projets --prefix=GestionProjets
  php artisan infyom:scaffold Tache --fromTable --table=taches --prefix=GestionProjets
+ 
 
 
 ### 2. Installation d'InfyOm Generator et des modèles AdminLTE:
