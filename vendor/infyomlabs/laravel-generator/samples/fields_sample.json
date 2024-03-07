@@ -128,9 +128,9 @@
         "searchable": false,
         "fillable": true,
         "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
+        "inForm": false,
+        "inIndex": false,
+        "inView": false
     },
     {
         "name": "created_at",

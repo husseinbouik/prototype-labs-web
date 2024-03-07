@@ -7,7 +7,12 @@
 @if($config->options->localized)
                 <th colspan="3">@lang('crud.action')</th>
 @else
-                <th colspan="3">Action</th>
+@@if ('{{ $config->modelNames->dashedPlural }}' === 'projets')
+
+                <th class="text-center">Tâches</th>
+@@endif
+
+                <th class="text-center">Action</th>
 @endif
             </tr>
             </thead>
@@ -15,6 +20,14 @@
             @@foreach(${{ $config->modelNames->camelPlural }} as ${{ $config->modelNames->camel }})
                 <tr>
                     {!! $fieldBody !!}
+                    @@if ('{{ $config->modelNames->dashedPlural }}' === 'projets')
+                    <td class="text-center">
+                        <a href="" class="btn btn-sm btn-secondary mx-2">
+                            <i class="nav-icon fas fa-tasks"></i> Les Tâches
+                        </a>
+                    </td>
+                    @@endif
+         
                     <td  style="width: 120px">
                         @{!! Form::open(['route' => ['{{ $config->prefixes->getRoutePrefixWith('.') }}{{ $config->modelNames->camelPlural }}.destroy', ${{ $config->modelNames->camel }}->{{ $config->primaryName }}], 'method' => 'delete']) !!}
                         <div class='btn-group'>
@@ -30,6 +43,7 @@
                         </div>
                         @{!! Form::close() !!}
                     </td>
+
                 </tr>
             @@endforeach
             </tbody>
